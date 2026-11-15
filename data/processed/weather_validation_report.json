@@ -1,0 +1,35 @@
+{
+  "rows": 130940,
+  "locations": 10,
+  "date_min": "1991-01-01",
+  "date_max": "2026-11-06",
+  "duplicate_location_date_rows": 0,
+  "invalid_dates": 0,
+  "missing_pct": {
+    "date": 0.0,
+    "temp_mean": 0.0,
+    "temp_max": 0.0,
+    "temp_min": 0.0,
+    "precip_mm": 0.0,
+    "humidity_pct": 0.0,
+    "wind_ms": 0.0,
+    "solar_kwh_m2": 0.02,
+    "source": 0.0,
+    "location_id": 0.0
+  },
+  "source_counts": {
+    "nasa_power": 130940
+  },
+  "rows_per_location": {
+    "alexandria": 13094,
+    "assiut": 13094,
+    "aswan": 13094,
+    "beheira": 13094,
+    "fayoum": 13094,
+    "gharbia": 13094,
+    "matrouh": 13094,
+    "minya": 13094,
+    "new_valley": 13094,
+    "sharqia": 13094
+  }
+}

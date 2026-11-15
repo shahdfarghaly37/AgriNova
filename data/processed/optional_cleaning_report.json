@@ -1,0 +1,96 @@
+{
+  "pesticides_clean.csv": {
+    "source_rows": 4349,
+    "rows_after_exact_deduplication": 4349,
+    "exact_duplicates_removed": 0,
+    "rows_in_duplicate_key_groups_review_required": 0,
+    "rows_missing_key_fields": 0,
+    "missing_pct": {
+      "domain": 0.0,
+      "area": 0.0,
+      "element": 0.0,
+      "item": 0.0,
+      "year": 0.0,
+      "unit": 0.0,
+      "value": 0.0
+    },
+    "columns": [
+      "domain",
+      "area",
+      "element",
+      "item",
+      "year",
+      "unit",
+      "value"
+    ]
+  },
+  "rainfall_clean.csv": {
+    "source_rows": 6727,
+    "rows_after_exact_deduplication": 6727,
+    "exact_duplicates_removed": 0,
+    "rows_in_duplicate_key_groups_review_required": 0,
+    "rows_missing_key_fields": 0,
+    "missing_pct": {
+      "area": 0.0,
+      "year": 0.0,
+      "average_rain_fall_mm_per_year": 11.6
+    },
+    "columns": [
+      "area",
+      "year",
+      "average_rain_fall_mm_per_year"
+    ]
+  },
+  "temperature_clean.csv": {
+    "source_rows": 71311,
+    "rows_after_exact_deduplication": 64353,
+    "exact_duplicates_removed": 6958,
+    "rows_in_duplicate_key_groups_review_required": 43464,
+    "rows_missing_key_fields": 0,
+    "missing_pct": {
+      "year": 0.0,
+      "country": 0.0,
+      "avg_temp": 2.14
+    },
+    "columns": [
+      "year",
+      "country",
+      "avg_temp"
+    ]
+  },
+  "fao_yield_clean.csv": {
+    "source_rows": 56717,
+    "rows_after_exact_deduplication": 56717,
+    "exact_duplicates_removed": 0,
+    "rows_in_duplicate_key_groups_review_required": 0,
+    "rows_missing_key_fields": 0,
+    "missing_pct": {
+      "domain_code": 0.0,
+      "domain": 0.0,
+      "area_code": 0.0,
+      "area": 0.0,
+      "element_code": 0.0,
+      "element": 0.0,
+      "item_code": 0.0,
+      "item": 0.0,
+      "year_code": 0.0,
+      "year": 0.0,
+      "unit": 0.0,
+      "value": 0.0
+    },
+    "columns": [
+      "domain_code",
+      "domain",
+      "area_code",
+      "area",
+      "element_code",
+      "element",
+      "item_code",
+      "item",
+      "year_code",
+      "year",
+      "unit",
+      "value"
+    ]
+  }
+}

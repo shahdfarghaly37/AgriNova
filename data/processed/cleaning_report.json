@@ -1,0 +1,45 @@
+{
+  "source_rows": 247321,
+  "rows_after_duplicate_removal_and_target_validation": 247319,
+  "duplicates_removed": 0,
+  "invalid_values_marked_missing": {
+    "soil_ph": 0,
+    "humidity_pct": 1266,
+    "rainfall_mm": 7,
+    "irrigation_mm": 0,
+    "days_from_last_harvest": 0,
+    "nitrogen_kg_ha": 0,
+    "phosphorus_kg_ha": 0,
+    "potassium_kg_ha": 0,
+    "pest_index": 0,
+    "crop_yield_tons": 0
+  },
+  "missing_pct_after_cleaning": {
+    "weather_zone": 0.0,
+    "irrigation_method": 0.0,
+    "soil_ph": 8.05,
+    "irrigation_mm": 0.0,
+    "days_from_last_harvest": 0.0,
+    "seed_quality": 0.0,
+    "soil_type": 0.0,
+    "fertilized": 0.0,
+    "nitrogen_kg_ha": 0.0,
+    "season": 0.0,
+    "rainfall_mm": 0.0,
+    "avg_temp_c": 0.0,
+    "crop_type": 0.0,
+    "phosphorus_kg_ha": 12.01,
+    "humidity_pct": 0.51,
+    "pest_index": 0.0,
+    "potassium_kg_ha": 10.06,
+    "crop_yield_tons": 0.0
+  },
+  "crop_types": [
+    "cotton",
+    "maize",
+    "rice",
+    "soybean",
+    "wheat"
+  ],
+  "note": "No percentile clipping was applied; extreme values require EDA review."
+}

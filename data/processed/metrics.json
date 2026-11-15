@@ -1,0 +1,208 @@
+{
+  "selected_model": "hist_gradient_boosting",
+  "target": "crop_yield_tons",
+  "categorical_features": [
+    "weather_zone",
+    "irrigation_method",
+    "seed_quality",
+    "soil_type",
+    "fertilized",
+    "season",
+    "crop_type"
+  ],
+  "numeric_features": [
+    "soil_ph",
+    "irrigation_mm",
+    "days_from_last_harvest",
+    "nitrogen_kg_ha",
+    "rainfall_mm",
+    "avg_temp_c",
+    "phosphorus_kg_ha",
+    "humidity_pct",
+    "pest_index",
+    "potassium_kg_ha"
+  ],
+  "feature_order": [
+    "weather_zone",
+    "irrigation_method",
+    "seed_quality",
+    "soil_type",
+    "fertilized",
+    "season",
+    "crop_type",
+    "soil_ph",
+    "irrigation_mm",
+    "days_from_last_harvest",
+    "nitrogen_kg_ha",
+    "rainfall_mm",
+    "avg_temp_c",
+    "phosphorus_kg_ha",
+    "humidity_pct",
+    "pest_index",
+    "potassium_kg_ha"
+  ],
+  "training_rows": 197855,
+  "test_rows": 49464,
+  "crop_types_seen": [
+    "cotton",
+    "maize",
+    "rice",
+    "soybean",
+    "wheat"
+  ],
+  "categories": {
+    "weather_zone": [
+      "dry",
+      "humid",
+      "temperate",
+      "tropical"
+    ],
+    "irrigation_method": [
+      "drip",
+      "flood",
+      "sprinkler"
+    ],
+    "seed_quality": [
+      "high",
+      "low",
+      "medium"
+    ],
+    "soil_type": [
+      "clay",
+      "loam",
+      "peat",
+      "sandy",
+      "silt"
+    ],
+    "fertilized": [
+      "no",
+      "yes"
+    ],
+    "season": [
+      "autumn",
+      "spring",
+      "summer",
+      "winter"
+    ],
+    "crop_type": [
+      "cotton",
+      "maize",
+      "rice",
+      "soybean",
+      "wheat"
+    ]
+  },
+  "numeric_ranges": {
+    "soil_ph": [
+      4.87,
+      8.16,
+      6.51
+    ],
+    "irrigation_mm": [
+      33.0,
+      403.0,
+      147.0
+    ],
+    "days_from_last_harvest": [
+      1.0,
+      548.0,
+      83.0
+    ],
+    "nitrogen_kg_ha": [
+      46.54,
+      316.2783999999999,
+      121.27
+    ],
+    "rainfall_mm": [
+      339.0,
+      1338.0,
+      837.0
+    ],
+    "avg_temp_c": [
+      12.0,
+      36.0,
+      24.0
+    ],
+    "phosphorus_kg_ha": [
+      24.09,
+      132.83790000000008,
+      56.57
+    ],
+    "humidity_pct": [
+      60.38,
+      99.14,
+      85.75
+    ],
+    "pest_index": [
+      2.0,
+      70.0,
+      26.0
+    ],
+    "potassium_kg_ha": [
+      28.79,
+      156.78700000000012,
+      67.2
+    ]
+  },
+  "models": {
+    "ridge_baseline": {
+      "cv_r2_mean": 0.4375,
+      "cv_r2_std": 0.0041,
+      "cv_mae_mean": 2.6534,
+      "test": {
+        "r2": 0.4378,
+        "mae": 2.6597,
+        "rmse": 3.311
+      }
+    },
+    "random_forest": {
+      "cv_r2_mean": 0.7565,
+      "cv_r2_std": 0.0028,
+      "cv_mae_mean": 1.7219,
+      "test": {
+        "r2": 0.7822,
+        "mae": 1.6343,
+        "rmse": 2.0607
+      }
+    },
+    "hist_gradient_boosting": {
+      "cv_r2_mean": 0.8262,
+      "cv_r2_std": 0.001,
+      "cv_mae_mean": 1.4484,
+      "test": {
+        "r2": 0.8403,
+        "mae": 1.3915,
+        "rmse": 1.7645
+      }
+    }
+  },
+  "per_crop_test": {
+    "cotton": {
+      "r2": 0.8441,
+      "mae": 1.2518,
+      "rmse": 1.589
+    },
+    "maize": {
+      "r2": 0.7524,
+      "mae": 1.5264,
+      "rmse": 1.9215
+    },
+    "rice": {
+      "r2": 0.8205,
+      "mae": 1.2197,
+      "rmse": 1.5413
+    },
+    "soybean": {
+      "r2": 0.7758,
+      "mae": 1.4447,
+      "rmse": 1.8287
+    },
+    "wheat": {
+      "r2": 0.7995,
+      "mae": 1.4517,
+      "rmse": 1.8341
+    }
+  },
+  "data_warning": "Source dataset is synthetic/unverified. Metrics measure fit to this dataset only, not accuracy on real Egyptian farms.",
+  "scenario_predictions": "Experimental. Only avg_temp_c may be filled from NASA data; rainfall, humidity and other mismatched-definition features stay at dataset medians. See 09_engine.py."
+}

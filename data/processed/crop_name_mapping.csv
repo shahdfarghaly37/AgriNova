@@ -1,0 +1,6 @@
+source_dataset,original_crop_label,canonical_crop_type,mapping_rule
+crop_yield_data.csv,corn,maize,alias
+crop_yield_data.csv,cotton,cotton,identity
+crop_yield_data.csv,rice,rice,identity
+crop_yield_data.csv,soybean,soybean,identity
+crop_yield_data.csv,wheat,wheat,identity

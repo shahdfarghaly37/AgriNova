@@ -1,0 +1,37 @@
+{
+  "status": "success",
+  "yield_rows_checked": 247321,
+  "original_yield_crop_labels": [
+    "corn",
+    "cotton",
+    "rice",
+    "soybean",
+    "wheat"
+  ],
+  "canonical_crop_types": [
+    "cotton",
+    "maize",
+    "rice",
+    "soybean",
+    "wheat"
+  ],
+  "crop_traits_rows": 5,
+  "crop_recommendation_matches": {
+    "maize": 100,
+    "cotton": 100,
+    "rice": 100,
+    "soybean": 0,
+    "wheat": 0
+  },
+  "important_limitations": [
+    "FAO water need is seasonal crop evapotranspiration, not rainfall or irrigation volume.",
+    "FAO maturity ranges are indicative and not cultivar-specific or Egypt-specific guarantees.",
+    "Crop recommendation quantiles are observed dataset distributions, not certified ideal limits.",
+    "Heat tolerance class and soil demand index are left blank rather than invented.",
+    "No yield dataset rows are changed by this script."
+  ],
+  "sources": [
+    "https://www.fao.org/4/s2022e/s2022e02.htm",
+    "https://www.fao.org/4/s2022e/s2022e07.htm"
+  ]
+}

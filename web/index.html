@@ -1,0 +1,436 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AgriNova</title><link rel="icon" href="logo.jpg">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css"><script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--g:#0F6B35;--g2:#22C55E;--bg:#FAF8F1;--ink:#14231B;--mut:#64748B;--line:#E7E5DC;--y:#EAB308;--o:#F97316;--r:#DC2626;--b:#0369A1;--bl:#E8EEFF}
+*{box-sizing:border-box;margin:0}body{font:15px "Plus Jakarta Sans",sans-serif;background:var(--bg);color:var(--ink)}
+button{font:inherit;cursor:pointer;border:0;background:none;color:inherit}
+header{display:flex;align-items:center;gap:14px;padding:12px 22px;background:#fff;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:9;flex-wrap:wrap}
+.logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:19px}.logo img{width:40px;height:40px;border-radius:12px}.logo small{display:block;font-size:9px;letter-spacing:.14em;color:var(--g);font-weight:700}
+.nav,.tog{display:flex;gap:2px;background:#F1F0EA;border-radius:99px;padding:4px}.nav{margin:0 auto;overflow:auto}
+.nav button,.tog button{padding:8px 16px;border-radius:99px;color:var(--mut);white-space:nowrap;font-weight:600}.nav .on{background:#fff;color:var(--g);box-shadow:0 1px 4px #0002}.tog .on{background:var(--g);color:#fff}
+main{max-width:1150px;margin:0 auto;padding:22px 16px 40px}
+.card{background:#fff;border:1px solid var(--line);border-radius:22px;padding:20px;box-shadow:0 8px 24px -14px #0F6B3540}
+.grid{display:grid;gap:14px}.g2{grid-template-columns:1fr 1fr}.g3{grid-template-columns:repeat(3,1fr)}.g4{grid-template-columns:repeat(4,1fr)}.gm{grid-template-columns:1.25fr 1fr}
+@media(max-width:820px){.g2,.g3,.g4,.gm{grid-template-columns:1fr}}
+/* Landing-page layout: presentation only; existing app views and logic remain intact */
+html{scroll-behavior:smooth;scroll-padding-top:100px}
+header{box-shadow:0 5px 18px #14231b12}
+.hero{height:min(68vh,650px);min-height:430px;align-items:center;text-align:center;background-position:center center;margin:18px 0 54px}
+.hero:before{content:"";position:absolute;inset:0;border-radius:26px;background:none;}
+.hero .btn{position:relative;z-index:1}
+.landing-wrap{padding:8px 0 30px}
+.landing-section{padding:48px 0;scroll-margin-top:96px}
+.landing-heading{max-width:760px;margin:0 auto 26px;text-align:center}
+.landing-heading .eye{margin-bottom:10px}
+.landing-heading h2{font-size:clamp(25px,3vw,36px);line-height:1.2}
+.landing-heading p{max-width:680px;margin:12px auto 0;line-height:1.85;color:var(--mut)}
+.landing-about{max-width:900px;margin:0 auto;text-align:center;line-height:1.9;font-size:16px}
+.landing-about .card{padding:30px}
+.feature-card{min-height:190px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;text-align:center;transition:transform .2s,box-shadow .2s}
+.feature-card:hover{transform:translateY(-4px);box-shadow:0 14px 30px -15px #0F6B3560}
+.feature-card .feature-icon{font-size:38px}
+.feature-card p{max-width:230px;line-height:1.65}
+.process-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.process-step{padding:24px;text-align:center}
+.process-step .step-icon{font-size:30px;margin-bottom:12px}
+.process-step p{line-height:1.7;margin-top:8px}
+.sustainability{background:#fff;border:1px solid var(--line);border-radius:24px;padding:30px;line-height:1.9}
+.sustainability-points{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:20px}
+.sustainability-points>div{background:#F7F8F2;border-radius:16px;padding:18px}
+.sustainability-points p{font-size:13px;color:var(--mut);margin-top:6px;line-height:1.7}
+.landing-footer-note{max-width:760px;margin:0 auto;text-align:center;line-height:1.8}
+@media(max-width:820px){.process-grid,.sustainability-points{grid-template-columns:1fr}.hero{min-height:360px;height:52vh;margin-bottom:28px}.landing-section{padding:32px 0}.sustainability{padding:20px}}
+
+h2{font-size:26px;font-weight:800}h3{font-size:18px;font-weight:800}.mut{color:var(--mut);font-size:13px}.eye{font-size:11px;letter-spacing:.12em;font-weight:700;color:var(--g);text-transform:uppercase}
+.pills{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}.pill{padding:9px 16px;border-radius:99px;background:#F1F4FB;font-weight:600;border:2px solid transparent}.pill.on{background:var(--g);color:#fff}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:14px 22px;border-radius:99px;background:var(--g);color:#fff;font-weight:700}.btn.big{width:100%;font-size:18px;padding:18px;background:linear-gradient(90deg,var(--g),var(--b))}.btn.l{background:var(--bl);color:var(--b)}
+input[type=number],input[type=date]{width:100%;padding:13px;border-radius:14px;border:1px solid var(--line);background:#F1F4FB;font:600 17px inherit}
+.hero{height:62vh;min-height:380px;border-radius:26px;background:#bbf7d0 url(hero.jpg) center/cover;position:relative;display:flex;align-items:flex-end;justify-content:center;padding:26px;margin-bottom:26px}
+.ring{--c:var(--g);width:70px;height:70px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(var(--c) calc(var(--p)*1%),#E5E7EB 0);flex:none}.ring b{width:54px;height:54px;border-radius:50%;background:#fff;display:grid;place-items:center;font-size:20px}
+.chip{display:inline-block;border-radius:99px;padding:3px 11px;font-size:12px;font-weight:700}.yes{background:#DCFCE7;color:#15803D}.maybe{background:#FEF3C7;color:#B45309}.no{background:#FEE2E2;color:#B91C1C}
+.row{display:flex;justify-content:space-between;align-items:center;gap:10px}.m{display:flex;justify-content:space-between;padding:6px 0;color:var(--mut)}
+.d i{display:inline-block;width:9px;height:9px;border-radius:50%;background:#E5E7EB;margin-left:4px}.l3 i.f{background:var(--g)}.l2 i.f{background:var(--y)}.l1 i.f{background:var(--o)}
+.num{font-size:44px;font-weight:800;line-height:1}.num small{font-size:15px;color:var(--mut);font-weight:600}
+.bar{height:8px;border-radius:9px;background:#EEF0F2;margin:8px 0}.bar i{display:block;height:100%;border-radius:9px}
+.alert{border-radius:22px;padding:20px;display:flex;gap:16px;align-items:center;margin-bottom:14px}.alert h2{font-size:30px}
+.alert.yes{background:#DCFCE7}.alert.maybe{background:#FEF3C7}.alert.no{background:#FEE2E2}
+.sel{border:2px solid var(--g)!important}.crp{padding:12px;border-radius:16px;background:#EEF2FF;text-align:center;font-weight:700;border:2px solid transparent}.crp.on{border-color:var(--g);background:#fff}
+input[type=range]{width:100%;accent-color:var(--g)}.tab{cursor:pointer}footer{padding:18px 24px;border-top:1px solid var(--line);background:#fff;font-size:13px;color:var(--mut)}
+.sel2{width:100%;padding:12px;border-radius:14px;border:1px solid var(--line);background:#F1F4FB;font:600 16px inherit;margin:8px 0}#map{height:55vh;min-height:360px;border-radius:18px}
+.hide{display:none}
+.warn{background:#FEF3C7;color:#B45309;border-radius:12px;padding:8px 14px;margin-bottom:12px;font-size:13px}
+/* Full-bleed hero: the image spans the whole screen width */
+body{overflow-x:hidden}
+#w-landing{padding-top:0!important}
+#w-landing .hero{width:100vw;margin:-22px 0 54px calc(50% - 50vw);height:calc(100vh - 70px);min-height:460px;border-radius:0;background-size:cover;background-position:center;align-items:flex-end;padding-bottom:48px}
+#w-landing .hero:before{border-radius:0}
+@media(max-width:820px){#w-landing .hero{height:calc(100vh - 110px);min-height:380px;margin-bottom:28px}}
+
+/* Arabic / RTL */
+html[lang=ar] body,html[lang=ar] button,html[lang=ar] input,html[lang=ar] select{font-family:"Cairo","Plus Jakarta Sans",sans-serif}
+html[dir=rtl] #map,html[dir=rtl] svg,html[dir=rtl] input[type=number],html[dir=rtl] input[type=date]{direction:ltr}
+html[dir=rtl] .eye{letter-spacing:0}
+html[dir=rtl] .logo small{letter-spacing:0}
+html[dir=rtl] #w-landing .hero{margin:-22px calc(50% - 50vw) 54px 0}
+.tog.lang button{background:var(--g);color:#fff;font-weight:700}
+.d i{margin-inline-start:4px;margin-left:0}
+</style></head><body>
+<header><div class="logo"><img src="logo.jpg" alt=""><div>AgriNova<small>NASA EARTH INSIGHTS</small></div></div>
+<div class="nav" id="nav"></div><div class="tog"><button class="on" id="tf">Farmer</button><button id="tb">Business</button></div><div class="tog lang"><button id="tl">عربي</button></div></header>
+<main id="app"></main><footer>AgriNova · Built for NASA International Space Apps Challenge · Weather: NASA POWER · Yield is an experimental estimate</footer>
+<script>
+const $=s=>document.querySelector(s),API=location.protocol==='file:'?'http://localhost:8000':'';
+const S={gov:'alexandria',soil:'loam',ph:7.0,m3:3800,irr:'drip',goal:'balanced',day:new Date().toISOString().slice(0,10),prev:['wheat'],crop:'wheat',w:{yield:5,soil:5,water:5}};
+try{Object.assign(S,JSON.parse(localStorage.fi||'{}'))}catch(_){}
+let GOV=[],CROPS=[];const RES=['grow','check','compare','drift','business'],DONE=new Set();let tm,cur='landing';const T=()=>document.getElementById('s-'+cur);
+const save=()=>{try{localStorage.fi=JSON.stringify(S)}catch(_){}clearTimeout(tm);tm=setTimeout(async()=>{for(const k of [...DONE])await R[k]()},600)};
+const PAGES=[['landing','Landing'],['map','Location'],['farm','My Farm'],['grow','Grow Now'],['check','Check a Crop'],['compare','Compare'],['drift','Climate Drift']];
+const COL={yes:'#15803D',maybe:'#CA8A04',no:'#DC2626'},gname=id=>(GOV.find(g=>g.id==id)||{}).name||id,cap=s=>s[0].toUpperCase()+s.slice(1);
+const q=(extra={})=>new URLSearchParams({gov:S.gov,soil:S.soil,...(S.ph==null?{}:{ph:S.ph}),...(S.lat==null?{}:{lat:S.lat,lon:S.lon}),m3:S.m3,irr:S.irr,goal:S.goal,day:S.day,prev:S.prev.join(','),...extra});
+const get=async p=>{const r=await fetch(API+p);if(!r.ok){let m='';try{m=(await r.json()).detail}catch(_){}throw new Error(m||r.status)}return r.json()};
+const busy=()=>{const e=T();if(!e.dataset.ok)e.innerHTML='<p class="mut" style="padding:40px;text-align:center">Loading from NASA data...</p>'};
+const fail=e=>T().innerHTML=`<div class="card fail"><h3>Could not load</h3><p class="mut">${e.message}. Make sure the server is running (run_server.bat) and open http://localhost:8000</p></div>`;
+const dots=l=>`<span class="d l${l}">${[1,2,3].map(i=>`<i class="${i<=l?'f':''}"></i>`).join('')}</span>`;
+const ring=(s,v,sz)=>`<div class="ring" style="--p:${s};--c:${COL[v]}"><b>${s}</b></div>`;
+const far=k=>k>150?`<div class="warn">The nearest weather station is about ${k} km away, so numbers are approximate.</div>`:'';
+const pickGov=id=>{S.gov=id;S.lat=S.lon=null;save()};
+const govPills=on=>`<select class="sel2" onchange="pickGov(this.value);${on}">${GOV.map(g=>`<option value="${g.id}" ${g.id==S.gov?'selected':''}>${g.name}</option>`).join('')}</select>`;
+let MODE='farmer';
+const setMode=m=>{MODE=m;$('#tf').classList.toggle('on',m=='farmer');$('#tb').classList.toggle('on',m=='business')};
+const wn=s=>s?s.split('; ').filter(x=>!/heat/i.test(x)).join('; '):'';
+const LAZY=[...RES,'map','menu','farm'];
+const go=async k=>{if(k=='business')setMode('business');else if(['menu','grow','check','compare','drift','map','landing'].includes(k))setMode('farmer');document.querySelectorAll('.view').forEach(v=>v.classList.toggle('hide',v.id!='w-'+k));
+ document.querySelectorAll('#nav button').forEach(b=>b.classList.toggle('on',b.dataset.k==k));window.scrollTo(0,0);
+ if(LAZY.includes(k))await R[k]()};
+function nav(){$('#nav').innerHTML=PAGES.map(([k,n])=>`<button data-k="${k}" onclick="go('${k}')">${n}</button>`).join('')}
+$('#tf').onclick=()=>go(S.lat!=null?'menu':'landing');$('#tb').onclick=()=>go('business');
+
+const R={
+async landing(){const c=`<div class="landing-wrap">
+<div class="hero"><button class="btn" onclick="go('map')">Explore Insights ↓</button></div>
+
+<section class="landing-section" id="about-project">
+  <div class="landing-heading"><span class="chip yes">NASA SPACE APPS EGYPT</span><p class="eye" style="margin-top:14px">AGRENOVO · NASA EARTH INSIGHTS</p>
+  <h2 style="font-size:clamp(30px,4vw,44px);margin-top:10px">From Earth Observation to Resilient Yields</h2>
+  <p>Turning climate and Earth observation data into practical insights for agricultural decisions.</p></div>
+  <div class="landing-about"><div class="card">
+    <p>Egyptian agriculture faces changing weather conditions and increasing pressure on water resources. AgreNovo brings climate information and crop knowledge together to help explore how local conditions may affect crop suitability and farming decisions.</p>
+  </div></div>
+</section>
+
+<section class="landing-section" id="platform-features">
+  <div class="landing-heading"><p class="eye">Explore the platform</p><h2>Tools to support smarter farming decisions</h2>
+  <p>Explore the existing tools for your location, farm conditions, crop choices, and changing climate patterns.</p></div>
+  <div class="grid g4">
+    ${[['farm','🌱','Grow Now','Explore crop and planting recommendations for your selected farm conditions.'],['check','🔬','Check a Crop','Review how a selected crop fits the local climate, soil, and water conditions.'],['compare','⚖️','Compare','Compare crop options across the platform’s decision factors.'],['drift','🌡️','Climate Drift','Explore changes in local temperature patterns and seasonal timing.']].map(([k,i,n,d])=>`<div class="card feature-card tab" onclick="go('${k}')"><div class="feature-icon">${i}</div><h3>${n}</h3><p class="mut">${d}</p></div>`).join('')}
+  </div>
+</section>
+
+<section class="landing-section" id="how-it-works">
+  <div class="landing-heading"><p class="eye">How it works</p><h2>From climate data to agricultural insights</h2>
+  <p>The platform connects environmental data with crop and farm context to make the information easier to explore.</p></div>
+  <div class="process-grid">
+    <div class="card process-step"><div class="step-icon">🛰️</div><h3>Earth & Climate Data</h3><p class="mut">Use NASA POWER climate information as an environmental reference for the selected location.</p></div>
+    <div class="card process-step"><div class="step-icon">🌾</div><h3>Crop & Farm Context</h3><p class="mut">Consider crop characteristics alongside location, soil, water, and planting preferences.</p></div>
+    <div class="card process-step"><div class="step-icon">📊</div><h3>Insights for Decisions</h3><p class="mut">Explore crop suitability, comparisons, climate patterns, and experimental estimates.</p></div>
+  </div>
+</section>
+
+<section class="landing-section" id="sustainable-agriculture">
+  <div class="sustainability">
+    <div class="landing-heading" style="margin-bottom:10px"><p class="eye">A focus on Egypt</p><h2>Supporting more sustainable Egyptian agriculture</h2></div>
+    <p class="landing-footer-note">By making climate and crop information easier to understand, AgreNovo aims to support more informed agricultural choices in Egypt. The platform encourages attention to water efficiency, soil conditions, crop suitability, and climate resilience, helping users explore decisions with sustainability in mind.</p>
+    <div class="sustainability-points">
+      <div><h3>💧 Water awareness</h3><p>Explore crop water needs and compare options with water availability in mind.</p></div>
+      <div><h3>🌱 Soil-conscious choices</h3><p>Include soil conditions when reviewing crop suitability and alternatives.</p></div>
+      <div><h3>🌡️ Climate resilience</h3><p>Understand local climate patterns and consider how changing conditions may affect planting decisions.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="landing-section" id="start-exploring">
+  <div class="landing-heading"><p class="eye">Explore your location</p><h2>Bring local conditions into the picture</h2>
+  <p>Start by selecting your location, then explore the platform’s existing farm and crop tools.</p></div>
+  <div style="text-align:center"><button class="btn" onclick="go('map')">Explore Insights ↓</button></div>
+</section>
+</div>`;T().innerHTML=c},
+
+async map(){let pin,mp;const g0=GOV.find(g=>g.id==S.gov)||GOV[0],at=S.lat!=null?[S.lat,S.lon]:[g0.lat,g0.lon];
+T().innerHTML=`<p class="eye">Step 1 · Where is your land?</p><h2>Pick your field on the map</h2><div class="card" style="margin-top:12px"><div class="row" style="flex-wrap:wrap;margin-bottom:10px"><button class="btn" id="gps">📍 Use my GPS</button><span class="mut" id="mi" style="flex:1"></span><button class="btn l" onclick="go('farm')">Continue →</button></div><div id="map"></div><p class="mut" style="margin-top:8px">Tap the map or drag the pin to move it.</p></div>`;
+if(typeof L==='undefined'){$('#map').innerHTML='<p class="warn">The map needs internet to load. Check your connection and refresh.</p>';return}
+mp=L.map('map').setView(at,S.lat!=null?11:7);L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:18,attribution:'© OpenStreetMap'}).addTo(mp);
+const near=(la,lo)=>GOV.map(g=>({g,d:Math.hypot((g.lat-la)*111,(g.lon-lo)*96)})).sort((a,b)=>a.d-b.d)[0];
+const set=(la,lo,fly)=>{if(la<21||la>32||lo<24||lo>37){$('#mi').textContent='This point is outside Egypt. Please pick a point inside Egypt.';return}
+ S.lat=+la.toFixed(4);S.lon=+lo.toFixed(4);const n=near(la,lo);S.gov=n.g.id;save();pin.setLatLng([la,lo]);if(fly)mp.setView([la,lo],11);
+ $('#mi').textContent=`${S.lat}, ${S.lon} · nearest governorate: ${n.g.name} (~${Math.round(n.d)} km from its centre)`};
+pin=L.marker(at,{draggable:true}).addTo(mp);pin.on('dragend',()=>{const p=pin.getLatLng();set(p.lat,p.lng)});mp.on('click',e=>set(e.latlng.lat,e.latlng.lng));
+if(S.lat!=null)set(at[0],at[1]);else $('#mi').textContent='Press "Use my GPS" or tap your field on the map.';
+$('#gps').onclick=()=>{if(!navigator.geolocation){$('#mi').textContent='GPS is not available in this browser.';return}$('#mi').textContent='Finding your location...';
+ navigator.geolocation.getCurrentPosition(p=>set(p.coords.latitude,p.coords.longitude,true),e=>$('#mi').textContent='Could not get GPS ('+e.message+'). Tap the map instead.',{enableHighAccuracy:true,timeout:15000})}},
+
+async menu(){const opt=[['grow','🌱','Grow Now','What is the best crop to plant on my land now?'],['check','🔬','Check a Crop','Can I grow a crop I already have in mind?'],['compare','⚖️','Compare','Trade yield, soil and water with my own priorities'],['drift','🌡️','Climate Drift','How much warmer has my area become?']];
+T().innerHTML=`<p class="eye">Step 3 · Your land is ready</p><h2>What would you like to know?</h2>
+<div class="card row" style="margin:14px 0;flex-wrap:wrap"><span class="mut">${gname(S.gov)}${S.lat!=null?` · ${(+S.lat).toFixed(3)}, ${(+S.lon).toFixed(3)}`:''} · ${cap(S.soil)} soil · ${cap(S.irr)} irrigation · planting ${S.day}</span><span><button class="btn l" onclick="go('map')">Change location</button> <button class="btn l" onclick="go('farm')">Edit my farm</button></span></div>
+<div class="grid g4">${opt.map(([k,i,n,t])=>`<div class="card tab" onclick="go('${k}')" style="text-align:center"><div style="font-size:38px">${i}</div><h3>${n}</h3><p class="mut">${t}</p></div>`).join('')}</div>`},
+
+async farm(){const o=(k,v,t)=>`<button class="pill ${S[k]==v?'on':''}" onclick="S['${k}']='${v}';save();R.farm()">${t}</button>`;
+const prev=['wheat','maize','rice','cotton','soybean','potato','sorghum'];
+T().innerHTML=`<p class="eye">Field setup · ${gname(S.gov)}</p>
+<div class="grid g2" style="margin:12px 0 14px">${[['farmer','🧑‍🌾','Farmer view','Look at your own field: crop advice for your land',"go(S.lat!=null?'menu':'map')"],['business','🏢','Business view','Regional commercial crop ranking and data export',"go('business')"]].map(([m,i,n,t,fn])=>`<div class="card tab ${MODE==m?'sel':''}" onclick="${fn}" style="display:flex;gap:14px;align-items:center;${MODE==m?'background:#E9FBEF':''}"><div style="font-size:34px">${i}</div><div style="flex:1"><h3 style="color:${MODE==m?'var(--g)':'var(--ink)'}">${n}</h3><p class="mut">${t}</p></div>${MODE==m?'<span class="chip yes">You are here</span>':'<span class="mut">Switch →</span>'}</div>`).join('')}</div>
+<div class="grid gm" style="margin-top:12px"><div class="grid">
+<div class="card row"><div><h3>📍 Location</h3><p class="mut">${gname(S.gov)}${S.lat!=null?` · ${(+S.lat).toFixed(3)}, ${(+S.lon).toFixed(3)}`:''}</p></div><button class="btn l" onclick="go('map')">Change on map</button></div>
+<div class="grid g2"><div class="card"><h3>Soil type</h3><div class="pills">${['loam','sandy','clay','silt','peat'].map(x=>o('soil',x,cap(x))).join('')}</div></div>
+<div class="card"><h3>Soil pH</h3><input type="number" step=".1" min="3" max="10" value="${S.ph??''}" placeholder="don't know" oninput="S.ph=this.value===''?null:+this.value;save()"><p class="mut">Leave empty if you don't know it</p></div></div>
+<div class="grid g2"><div class="card"><h3>Water per season</h3><input type="number" value="${S.m3}" oninput="S.m3=+this.value||3800;save()"><p class="mut">m³ per feddan · typical 3000 to 5000</p></div>
+<div class="card"><h3>Irrigation</h3><div class="pills">${['flood','sprinkler','drip'].map(x=>o('irr',x,cap(x))).join('')}</div></div></div>
+<div class="grid g2"><div class="card"><h3>Planting date</h3><input type="date" value="${S.day}" onchange="S.day=this.value;save()"></div>
+<div class="card"><h3>Previous crops</h3><div class="pills">${prev.map(x=>`<button class="pill ${S.prev.includes(x)?'on':''}" onclick="togPrev('${x}')">${cap(x)}</button>`).join('')}</div></div></div></div>
+<div class="card" style="align-self:start"><p class="eye">Goal</p><div class="pills">${[['balanced','Balanced'],['max_yield','Max yield'],['save_water','Save water'],['protect_soil','Protect soil']].map(([v,t])=>o('goal',v,t)).join('')}</div>
+<button class="btn big" onclick="go('menu')">Show me →</button></div></div>`},
+
+async grow(){busy();try{const d=await get('/api/app/suggest?'+q()),t=d.crops[0],c4=d.crops.slice(0,4);const ep=ecoPick(d.crops);
+T().innerHTML=far(d.station_km)+`<div class="card row" style="margin-bottom:14px;flex-wrap:wrap"><div><b>Planting date</b><p class="mut">The planting date and your location change the ranking.</p></div><input type="date" style="width:200px" value="${S.day}" onchange="S.day=this.value;save();R.farm()"></div><div class="card row" style="background:linear-gradient(90deg,#fff,#E9FBEF)">${ring(t.score,t.verdict)}<div style="flex:1;margin-left:10px"><span class="chip ${t.verdict}">${t.label}</span> <span class="mut">Best crop now · ${gname(S.gov)}</span><h2>${t.name}</h2><p class="mut">Harvest: ${t.harvest||'-'}</p></div><button class="btn" onclick="S.crop='${t.crop}';save();go('check')">Check ${t.name} →</button></div>
+${ep?`<div class="card" style="margin-top:14px;border:2px solid ${ep.eco?'var(--g2)':'var(--line)'};background:${ep.eco?'#F3FCF6':'#fff'}"><div class="row" style="flex-wrap:wrap"><div><span class="chip ${ep.eco?'yes':'maybe'}">${ep.eco?'🌍 ECO-FRIENDLY PICK':'BALANCED ALTERNATIVE'}</span> <span class="mut">Runner-up crop · rank #${ep.rank}</span><h3 style="margin:8px 0 4px">${ep.c.name}</h3></div><button class="btn l" onclick="S.crop='${ep.c.crop}';save();go('check')">Check ${ep.c.name} →</button></div>${ep.eco?`<ul style="margin:8px 0 0;padding-inline-start:20px;line-height:1.8">${ep.why.map(w=>`<li>${w}</li>`).join('')}</ul>`:`<p class="mut" style="margin-top:6px">None of the other top crops is clearly gentler on soil and water than the best crop, so this is shown only as a balanced alternative, not as an eco choice.</p>`}</div>`:''}
+<div class="grid g4" style="margin-top:14px">${d.crops.slice(0,4).map(c=>`<div class="card tab" onclick="S.crop='${c.crop}';save();go('check')"><div class="row">${ring(c.score,c.verdict)}</div><span class="chip ${c.verdict}">${c.label}</span><h3 style="margin:6px 0">${c.name}</h3>
+<div class="m"><span>Water</span>${dots(c.water)}</div><div class="m"><span>Soil</span>${dots(c.soil)}</div><p class="mut">Harvest: ${c.harvest||'-'}</p>${c.yield_available===false?'<p class="mut" style="font-size:12px">Yield forecast · coming with FAO data</p>':''}</div>`).join('')}</div>
+${S.goal==='max_yield'&&d.crops.some(c=>c.yield_available===false)?'<p class="warn" style="margin-top:12px">Goal is Max yield: crops without a yield forecast are scored on their other factors only.</p>':''}
+${d.crops[4]?`<p class="eye" style="margin:20px 0 8px">Also available</p><div class="pills">${d.crops.slice(4).map(c=>`<button class="pill" onclick="S.crop='${c.crop}';save();go('check')">${c.name} · ${c.score}</button>`).join('')}</div>`:''}
+<p class="eye" style="margin:20px 0 4px">Other crops · indicative only</p><p class="mut" style="margin-bottom:8px">The crops above have the full analysis (climate, water, soil), and a yield estimate for most of them. These are scored on climate and pH alone, so they are not comparable with the list above.</p><div class="pills">${d.more.map(c=>`<button class="pill" onclick="S.crop='${c.crop}';save();go('check')">${c.name} · ${c.score}</button>`).join('')}</div>`}catch(e){fail(e)}},
+
+async check(){busy();try{const d=await get('/api/app/check?'+q({crop:S.crop})),v=d.verdict;
+const stat=(t,big,u,sub,col)=>`<div class="card"><h3>${t}</h3><div class="num" style="color:${col}">${big}<small> ${u}</small></div><p class="mut">${sub}</p></div>`;
+T().innerHTML=`<div class="grid gm"><div class="card"><h3>Select crop</h3><div class="grid g3" style="margin-top:10px">${CROPS.map(c=>`<button class="crp ${c.id==S.crop?'on':''}" onclick="S.crop='${c.id}';save();R.check()">${c.name}</button>`).join('')}</div>${govPills('R.check()')}</div>
+<div><div class="alert ${v}">${ring(d.score,v)}<div><span class="eye">${gname(S.gov)}</span><h2>${d.name}: ${d.label}</h2></div></div>
+${d.limited?`<div class="card"><span class="chip maybe">CLIMATE + pH ONLY · INDICATIVE</span><p class="mut" style="margin:8px 0">This crop has no water or yield data in our dataset, so it is scored on climate and soil pH only. Its score cannot be compared with the fully analysed crops.</p>
+<div class="m"><span>Temperature fit</span><b>${d.temp_fit}%</b></div><div class="bar"><i style="width:${d.temp_fit}%;background:var(--g)"></i></div>
+<div class="m"><span>pH fit</span><b>${d.ph_known?d.ph_fit+'%':'pH not given'}</b></div><div class="bar"><i style="width:${d.ph_fit}%;background:var(--b)"></i></div></div>`:`<div class="grid g2">
+${(()=>{const f=d.fao_yield_t_ha;
+ if(f==null)return stat('Expected yield','-','t/ha','No Egypt reference yield for this crop',COL.maybe);
+ if(d.yield_available===false||d.yield_index==null)return stat('Typical yield in Egypt',f,'t/ha',`Real FAO average (${d.fao_years}). ${d.yield_note||''}`,COL.maybe);
+ const e=(f*Math.min(1.25,Math.max(0.75,d.yield_index))).toFixed(1);
+ return stat('Expected yield',e,'t/ha',`Typical in Egypt: ${f} t/ha (FAO ${d.fao_years}). Experimental estimate, not a forecast`,COL.yes)})()}
+${stat('Water',d.water_mm,'mm / season',d.water_feasible?`Within your capacity (${d.water_cap} mm)`:`Over your capacity (${d.water_cap} mm)`,d.water_feasible?COL.yes:COL.no)}
+${stat('Soil',d.soil_score,'% match',d.soil_note||'',COL.yes)}</div>`}
+${wn(d.warnings)?`<div class="warn" style="margin-top:12px">${wn(d.warnings)}</div>`:''}</div></div>
+${d.limited?'':`<div class="grid g2" style="margin-top:14px"><div class="card"><h3>Grow instead</h3>${d.alternatives.length?d.alternatives.map(a=>`<div class="m" style="cursor:pointer" onclick="S.crop='${a.crop}';save();R.check()"><b style="color:var(--ink)">${a.name} · ${Math.round(a.score)}</b><span>${a.d_yield!=null?`yield ${a.d_yield>0?'+':''}${a.d_yield} · water ${a.d_water>0?'+':''}${a.d_water}`:''}</span></div>`).join(''):'<p class="mut">Nothing clearly better right now.</p>'}</div>
+<div class="card"><h3>Or wait</h3>${d.wait?`<p><b>${d.wait.date}</b> (in ${d.wait.days} days)</p><span class="chip ${d.wait.verdict}">Score then: ${d.wait.score}</span>`:'<p class="mut">No better planting date found.</p>'}</div></div>`}`}catch(e){fail(e)}},
+
+async compare(){busy();try{const d=await get('/api/app/compare?'+q({w_yield:S.w.yield,w_soil:S.w.soil,w_water:S.w.water})),b=d.crops.find(c=>c.best)||d.crops[0];
+const sl=(k,t)=>`<div style="margin:14px 0"><div class="row"><b>${t}</b><span class="chip maybe">${S.w[k]*10}%</span></div><input type="range" min="0" max="10" value="${S.w[k]}" onchange="S.w['${k}']=+this.value;save();R.compare()"></div>`;
+const top=d.crops.slice(0,3),cl=['#0F6B35','#EAB308','#0369A1'];
+const mets=[['Yield','yield_score'],['Water efficiency','water_score'],['Soil benefit','soil_score'],['Season fit','season_fit']];
+const pre=(a,b,c)=>`onclick="S.w={yield:${a},soil:${b},water:${c}};save();R.compare()"`;
+T().innerHTML=`<div class="row" style="flex-wrap:wrap;margin-bottom:14px"><div><p class="eye">Decision matrix</p><h2>Crop Viability & Regret Comparison</h2></div><div class="pills"><button class="pill" ${pre(5,5,10)}>Water Saver</button><button class="pill" ${pre(10,3,5)}>Max Profit</button><button class="pill" ${pre(5,10,5)}>Soil Care</button></div></div>
+<div class="grid" style="grid-template-columns:.8fr 1.4fr"><div class="card" style="align-self:start"><div class="row"><h3>Scenario weights</h3><button class="mut" onclick="S.w={yield:5,soil:5,water:5};save();R.compare()">Reset</button></div>${sl('yield','Yield priority')}${sl('soil','Soil benefit')}${sl('water','Water conservation')}</div>
+<div><div class="card" style="background:var(--g);color:#fff"><span class="chip maybe">LEAST REGRET CHOICE</span><div class="row"><h2 style="font-size:32px;margin-top:8px">${b.name}</h2><div style="text-align:right"><span style="font-size:11px;letter-spacing:.1em">FIT SCORE</span><div class="num">${b.fit}<small style="color:#fff9">/100</small></div></div></div><p style="opacity:.9;margin-top:6px">${wn(b.warnings)||'Smallest weighted loss across yield, soil and water for your farm.'}</p></div>
+<div class="card" style="margin-top:14px"><div class="row"><h3>4-metric comparison</h3><span class="mut">${top.map((c,i)=>`<b style="color:${cl[i]}">●</b> ${c.name}`).join(' &nbsp; ')}</span></div>
+${mets.map(([t,k],i)=>`<p style="margin-top:12px;font-weight:600">${i+1}. ${t}</p>${top.map((c,j)=>c[k]==null?`<div class="bar"><i style="width:0"></i></div><p class="mut" style="font-size:12px">${c.name}: no yield estimate yet</p>`:`<div class="bar"><i style="width:${c[k]}%;background:${cl[j]}"></i></div>`).join('')}`).join('')}</div></div></div>
+<p class="eye" style="margin:20px 0 8px">Rank order · ranked by weighted fit</p><div class="grid g3">${d.crops.slice(0,3).map((c,i)=>`<div class="card ${c.best?'sel':''}"><div class="row"><span class="mut">RANK #${i+1}${c.best?' · LEAST REGRET':''}</span><span class="chip ${c.verdict}">${c.fit}</span></div><h3 style="margin:8px 0">${c.name}</h3>${c.comparable_on_yield===false?'<p class="mut" style="font-size:12px">No yield estimate yet · not in the regret pick</p>':''}<div class="m"><span>Water</span><b>${c.water_score}</b></div><div class="m"><span>Regret</span><b>${c.regret}</b></div><button class="btn ${c.best?'':'l'}" style="width:100%;margin-top:8px" onclick="S.crop='${c.crop}';save();go('check')">${c.best?'Select crop':'Check crop'}</button></div>`).join('')}</div>`}catch(e){fail(e)}},
+
+async drift(){busy();try{const d=await get('/api/app/drift?gov='+S.gov+(S.lat==null?'':`&lat=${S.lat}&lon=${S.lon}`)),W=700,H=300,all=[...d.baseline,...d.recent],lo=Math.min(...all)-2,hi=Math.max(...all)+2;
+const X=i=>40+i*(W-60)/11,Y=v=>H-30-(v-lo)/(hi-lo)*(H-60),pt=a=>a.map((v,i)=>`${X(i)},${Y(v)}`).join(' ');
+const area=`${pt(d.recent)} ${[...d.baseline].reverse().map((v,i)=>`${X(11-i)},${Y(v)}`).join(' ')}`;
+T().innerHTML=far(d.km)+`${govPills('R.drift()')}<div class="grid gm"><div class="card"><p class="eye">Thermal analysis · ${d.station} station</p><h2>${gname(S.gov)} Thermal Curve</h2><p class="mut">Dashed = baseline · Green = recent years (since ${d.since})</p>
+<svg viewBox="0 0 ${W} ${H}" width="100%"><polygon points="${area}" fill="#0F6B3522"/><polyline points="${pt(d.baseline)}" fill="none" stroke="#777" stroke-dasharray="6 5" stroke-width="2"/><polyline points="${pt(d.recent)}" fill="none" stroke="#0F6B35" stroke-width="3"/>
+${d.months.map((m,i)=>`<text x="${X(i)}" y="${H-8}" font-size="11" text-anchor="middle" fill="#64748B">${m}</text>`).join('')}${[0,1,2,3].map(i=>{const v=lo+(hi-lo)*i/3;return `<text x="4" y="${Y(v)+4}" font-size="11" fill="#64748B">${Math.round(v)}°C</text>`}).join('')}</svg></div>
+<div class="grid"><div class="card"><p class="eye" style="color:var(--r)">Annual thermal delta</p><div class="num">${d.mean_delta>0?'+':''}${d.mean_delta}<small>°C</small></div><p class="mut">Mean temperature rise</p><div class="m"><span>Baseline ${d.base_avg}°C avg</span><b>Recent ${d.recent_avg}°C</b></div></div>
+<div class="card"><p class="eye">Season shift window</p><div class="num">${Math.abs(d.shift_days)}<small> days</small></div><p class="mut">Average gap between today and the best planting start for wheat and cotton</p></div>
+<div class="card row"><div><b>Explore viable crops</b><p class="mut">Adjust planting dates for the shifted season</p></div><button class="btn" onclick="go('check')">Check a Crop</button></div></div></div>`}catch(e){fail(e)}},
+
+async business(){busy();try{const d=await get('/api/app/business?gov='+S.gov+(S.lat==null?'':`&lat=${S.lat}&lon=${S.lon}`)),ranked=d.crops.filter(c=>c.yield_available!==false),extra=d.crops.filter(c=>c.yield_available===false);
+T().innerHTML=`<div class="card"><p class="eye">Enterprise · live NASA POWER feed</p><h2>Right now · ${gname(S.gov)}</h2><p class="mut">Commercial feasibility projections (goal: max yield)</p>${govPills('R.business()')}</div>
+<p class="eye" style="margin:18px 0 8px">Top regional commercial crops</p><div class="grid g3">${ranked.slice(0,3).map((c,i)=>`<div class="card"><span class="chip yes">RANK #${i+1}</span><h3 style="margin:8px 0">${c.name}</h3><div class="row"><span class="mut">Overall score</span><b>${c.score}</b></div><div class="bar"><i style="width:${c.score}%;background:${COL[c.verdict]}"></i></div><div class="m"><span>Yield score</span><b>${c.yield_score}</b></div><div class="m"><span>Water</span><b>${c.water_score}</b></div></div>`).join('')}</div>
+${extra.length?`<p class="eye" style="margin:18px 0 8px">Also analysed · no yield forecast yet</p><div class="pills">${extra.map(c=>`<span class="pill">${c.name} · ${c.score}${c.fao_yield_t_ha!=null?` · FAO ${c.fao_yield_t_ha} t/ha`:''}</span>`).join('')}</div>`:''}
+<div class="grid g2" style="margin-top:14px"><div class="card"><h3>Last 14 days temperature</h3><div class="num">${d.temp_14d}<small>°C mean</small></div><p class="mut">Max ${d.tmax_14d}°C · as of ${d.as_of}</p></div><div class="card"><h3>Last 90 days rain</h3><div class="num">${d.rain_90d}<small> mm</small></div><p class="mut">Source: NASA POWER</p></div></div>
+<div class="card row" style="margin-top:14px"><div><b>Export regional crop data</b><p class="mut">Scores for every crop in ${gname(S.gov)}</p></div><div><a class="btn l" href="${API}/api/app/business.csv?gov=${S.gov}${S.lat==null?'':`&lat=${S.lat}&lon=${S.lon}`}">Download CSV</a> <a class="btn" href="${API}/docs" target="_blank">Get API</a></div></div>`}catch(e){fail(e)}}};
+function ecoPick(cs){const top=cs[0],ok=c=>c.soil_score>=60&&c.water_score>=60&&c.score>=50;
+ const rest=cs.slice(1,4);let c=rest.find(ok),eco=!!c;if(!c)c=cs[1];if(!c)return null;
+ const why=[];
+ if(eco){why.push(`Gentle on the soil: soil score ${c.soil_score}/100${top.soil_score<c.soil_score?` (vs ${top.soil_score} for ${top.name})`:''}`);
+  why.push(`Water-efficient: water score ${c.water_score}/100${top.water_score<c.water_score?` (vs ${top.water_score} for ${top.name})`:''}`);
+  if(c.crop=='soybean')why.push('A legume: it fixes nitrogen in the soil, so it needs less fertiliser and helps the next crop');
+  why.push(`Still suitable for your farm: overall score ${c.score}`)}
+ return{c,eco,why,rank:cs.indexOf(c)+1}}
+function togPrev(x){S.prev=S.prev.includes(x)?S.prev.filter(y=>y!=x):[x,...S.prev];save();R.farm()}
+function locate(){navigator.geolocation&&navigator.geolocation.getCurrentPosition(p=>{let b=GOV[0],m=1e9;GOV.forEach(g=>{const d=(g.lat-p.coords.latitude)**2+(g.lon-p.coords.longitude)**2;if(d<m){m=d;b=g}});S.gov=b.id;save();R.farm()})}
+for(const k in R){const f=R[k];R[k]=async(...a)=>{cur=k;if(RES.includes(k))DONE.add(k);const r=await f(...a);const e=T();if(e&&!e.querySelector('.fail'))e.dataset.ok=1;return r}}
+document.querySelector('#app').innerHTML=['landing','map','farm','menu',...RES].map(k=>`<div class="view hide" id="w-${k}" style="padding:10px 0">${RES.includes(k)?`<button class="pill" style="margin-bottom:12px" onclick="go('menu')">← Back to options</button>`:''}<section id="s-${k}"></section></div>`).join('');
+async function route(){
+    nav();
+
+    document.querySelectorAll('.view').forEach(v => {
+        v.classList.add('hide');
+    });
+
+    cur = 'landing';
+
+    await R.landing();
+
+    document.getElementById('w-landing').classList.remove('hide');
+
+    document.querySelectorAll('#nav button').forEach(b => {
+        b.classList.toggle('on', b.dataset.k === 'landing');
+    });
+
+    window.scrollTo(0, 0);
+}
+(async()=>{try{[GOV,CROPS]=await Promise.all([get('/api/governorates'),get('/api/crops')]);if(!GOV.find(g=>g.id==S.gov))S.gov=GOV[0].id;await route();window.__i18nReady&&__i18nReady()}catch(e){nav();fail(e)}})();
+</script>
+<script>
+/* ===== Arabic / English switch (DOM translator; English stays the source language) ===== */
+(()=>{
+const ARGOV={alexandria:'الإسكندرية',beheira:'البحيرة',gharbia:'الغربية',sharqia:'الشرقية',fayoum:'الفيوم',minya:'المنيا',assiut:'أسيوط',aswan:'أسوان',matrouh:'مطروح',new_valley:'الوادي الجديد',cairo:'القاهرة',giza:'الجيزة',dakahlia:'الدقهلية',kafr_elsheikh:'كفر الشيخ',menoufia:'المنوفية',qalyubia:'القليوبية',damietta:'دمياط',port_said:'بورسعيد',ismailia:'الإسماعيلية',suez:'السويس',north_sinai:'شمال سيناء',south_sinai:'جنوب سيناء',beni_suef:'بني سويف',sohag:'سوهاج',qena:'قنا',luxor:'الأقصر',red_sea:'البحر الأحمر'};
+const ARCROP={wheat:'القمح',maize:'الذرة',rice:'الأرز',cotton:'القطن',soybean:'فول الصويا',potato:'البطاطس',sorghum:'الذرة الرفيعة',banana:'الموز',chickpea:'الحمص',grapes:'العنب',lentil:'العدس',mango:'المانجو',muskmelon:'الشمام',orange:'البرتقال',papaya:'البابايا',pomegranate:'الرمان',watermelon:'البطيخ'};
+const MON={Jan:'يناير',Feb:'فبراير',Mar:'مارس',Apr:'أبريل',May:'مايو',Jun:'يونيو',Jul:'يوليو',Aug:'أغسطس',Sep:'سبتمبر',Oct:'أكتوبر',Nov:'نوفمبر',Dec:'ديسمبر'};
+const SOIL={loam:'اللومية',sandy:'الرملية',clay:'الطينية',silt:'الغرينية',peat:'الخثية'};
+const IRR={flood:'بالغمر',sprinkler:'بالرش',drip:'بالتنقيط'};
+const LBL={'Recommended':'موصى به','Possible with caution':'ممكن بحذر','Not recommended':'غير موصى به'};
+const D={
+'Landing':'الرئيسية','Location':'الموقع','My Farm':'مزرعتي','Grow Now':'ازرع الآن','Check a Crop':'افحص محصولًا','Compare':'قارن','Climate Drift':'تغيّر المناخ','Farmer':'مزارع','Business':'أعمال','NASA EARTH INSIGHTS':'رؤى ناسا الأرضية',
+'AgriNovo · Built for NASA International Space Apps Challenge · Weather: NASA POWER · Yield is an experimental estimate':'AgreNovo · بُني لمسابقة ناسا الدولية Space Apps · الطقس: NASA POWER · الإنتاجية تقدير تجريبي',
+'Explore Insights ↓':'استكشف الرؤى ↓','NASA SPACE APPS EGYPT':'ناسا سبيس آبس مصر','AGRENOVO · NASA EARTH INSIGHTS':'AGRENOVO · رؤى ناسا الأرضية',
+'From Earth Observation to Resilient Yields':'من رصد الأرض إلى محاصيل أكثر صمودًا',
+'Turning climate and Earth observation data into practical insights for agricultural decisions.':'نحوّل بيانات المناخ ورصد الأرض إلى رؤى عملية تدعم القرارات الزراعية.',
+'Egyptian agriculture faces changing weather conditions and increasing pressure on water resources. AgreNovo brings climate information and crop knowledge together to help explore how local conditions may affect crop suitability and farming decisions.':'تواجه الزراعة المصرية تغيّرًا في الأحوال الجوية وضغطًا متزايدًا على موارد المياه. يجمع AgreNovo بين معلومات المناخ ومعرفة المحاصيل لمساعدتك على استكشاف أثر الظروف المحلية على ملاءمة المحاصيل والقرارات الزراعية.',
+'Explore the platform':'استكشف المنصة','Tools to support smarter farming decisions':'أدوات تدعم قرارات زراعية أذكى',
+'Explore the existing tools for your location, farm conditions, crop choices, and changing climate patterns.':'استكشف الأدوات المتاحة حسب موقعك وظروف مزرعتك واختيارات المحاصيل وأنماط المناخ المتغيرة.',
+'Explore crop and planting recommendations for your selected farm conditions.':'اطّلع على توصيات المحاصيل والزراعة حسب ظروف مزرعتك.',
+'Review how a selected crop fits the local climate, soil, and water conditions.':'راجع مدى ملاءمة المحصول المختار للمناخ والتربة والمياه في منطقتك.',
+'Compare crop options across the platform’s decision factors.':'قارن بين المحاصيل وفق عوامل القرار في المنصة.',
+'Explore changes in local temperature patterns and seasonal timing.':'استكشف التغيّر في أنماط الحرارة المحلية ومواعيد المواسم.',
+'How it works':'كيف تعمل المنصة','From climate data to agricultural insights':'من بيانات المناخ إلى رؤى زراعية',
+'The platform connects environmental data with crop and farm context to make the information easier to explore.':'تربط المنصة البيانات البيئية بسياق المحصول والمزرعة لتسهيل استكشاف المعلومات.',
+'Earth & Climate Data':'بيانات الأرض والمناخ','Use NASA POWER climate information as an environmental reference for the selected location.':'نستخدم بيانات مناخ NASA POWER كمرجع بيئي للموقع المختار.',
+'Crop & Farm Context':'سياق المحصول والمزرعة','Consider crop characteristics alongside location, soil, water, and planting preferences.':'نأخذ خصائص المحصول في الاعتبار مع الموقع والتربة والمياه وتفضيلات الزراعة.',
+'Insights for Decisions':'رؤى تدعم القرار','Explore crop suitability, comparisons, climate patterns, and experimental estimates.':'استكشف ملاءمة المحاصيل والمقارنات وأنماط المناخ والتقديرات التجريبية.',
+'A focus on Egypt':'تركيز على مصر','Supporting more sustainable Egyptian agriculture':'دعم زراعة مصرية أكثر استدامة',
+'By making climate and crop information easier to understand, AgreNovo aims to support more informed agricultural choices in Egypt. The platform encourages attention to water efficiency, soil conditions, crop suitability, and climate resilience, helping users explore decisions with sustainability in mind.':'بتسهيل فهم معلومات المناخ والمحاصيل، يهدف AgreNovo إلى دعم خيارات زراعية أكثر وعيًا في مصر. وتشجّع المنصة الاهتمام بكفاءة استخدام المياه وحالة التربة وملاءمة المحاصيل والمرونة المناخية، لمساعدة المستخدمين على استكشاف قراراتهم مع وضع الاستدامة في الاعتبار.',
+'💧 Water awareness':'💧 الوعي بالمياه','Explore crop water needs and compare options with water availability in mind.':'استكشف احتياجات المحاصيل من المياه وقارن الخيارات مع مراعاة المياه المتاحة.',
+'🌱 Soil-conscious choices':'🌱 خيارات تراعي التربة','Include soil conditions when reviewing crop suitability and alternatives.':'ضع حالة التربة في الاعتبار عند مراجعة ملاءمة المحاصيل وبدائلها.',
+'🌡️ Climate resilience':'🌡️ المرونة المناخية','Understand local climate patterns and consider how changing conditions may affect planting decisions.':'افهم أنماط المناخ المحلية وكيف قد تؤثر الظروف المتغيرة على قرارات الزراعة.',
+'Explore your location':'استكشف موقعك','Bring local conditions into the picture':'أدخل الظروف المحلية في الصورة',
+'Start by selecting your location, then explore the platform’s existing farm and crop tools.':'ابدأ باختيار موقعك، ثم استكشف أدوات المزرعة والمحاصيل في المنصة.',
+'Loading from NASA data...':'جارٍ التحميل من بيانات ناسا...','Could not load':'تعذّر التحميل','← Back to options':'← العودة إلى الخيارات',
+'Step 1 · Where is your land?':'الخطوة 1 · أين أرضك؟','Pick your field on the map':'اختر حقلك على الخريطة','📍 Use my GPS':'📍 استخدم موقعي (GPS)','Continue →':'متابعة →',
+'Tap the map or drag the pin to move it.':'اضغط على الخريطة أو اسحب الدبوس لتحريكه.','This point is outside Egypt. Please pick a point inside Egypt.':'هذه النقطة خارج مصر. اختر نقطة داخل مصر.',
+'Press "Use my GPS" or tap your field on the map.':'اضغط «استخدم موقعي» أو اضغط على حقلك في الخريطة.','GPS is not available in this browser.':'خاصية GPS غير متاحة في هذا المتصفح.','Finding your location...':'جارٍ تحديد موقعك...',
+'The map needs internet to load. Check your connection and refresh.':'الخريطة تحتاج إنترنت لتعمل. تأكد من اتصالك ثم حدّث الصفحة.',
+'Step 3 · Your land is ready':'الخطوة 3 · أرضك جاهزة','What would you like to know?':'ماذا تريد أن تعرف؟','Change location':'تغيير الموقع','Edit my farm':'تعديل مزرعتي',
+'What is the best crop to plant on my land now?':'ما أفضل محصول أزرعه في أرضي الآن؟','Can I grow a crop I already have in mind?':'هل أستطيع زراعة محصول فكرت فيه بالفعل؟',
+'Trade yield, soil and water with my own priorities':'وازن بين الإنتاجية والتربة والمياه حسب أولوياتك','How much warmer has my area become?':'كم ارتفعت الحرارة في منطقتي؟',
+'Farmer view':'عرض المزارع','Look at your own field: crop advice for your land':'انظر إلى حقلك: نصائح المحاصيل لأرضك','Business view':'عرض الأعمال','Regional commercial crop ranking and data export':'ترتيب المحاصيل التجارية في المنطقة وتصدير البيانات',
+'You are here':'أنت هنا','Switch →':'انتقل →','📍 Location':'📍 الموقع','Change on map':'تغيير على الخريطة','Soil type':'نوع التربة','Soil pH':'درجة حموضة التربة (pH)',
+"Leave empty if you don't know it":'اتركه فارغًا إن لم تكن تعرفه','Water per season':'المياه في الموسم','m³ per feddan · typical 3000 to 5000':'م³ للفدان · المعتاد من 3000 إلى 5000','Irrigation':'الري',
+'Previous crops':'المحاصيل السابقة','Goal':'الهدف','Show me →':'اعرض لي →',
+'Loam':'لومية','Sandy':'رملية','Clay':'طينية','Silt':'غرينية','Peat':'خثية','Flood':'غمر','Sprinkler':'رش','Drip':'تنقيط',
+'Balanced':'متوازن','Max yield':'أعلى إنتاجية','Save water':'توفير المياه','Protect soil':'حماية التربة',
+'Planting date':'موعد الزراعة','The planting date and your location change the ranking.':'موعد الزراعة وموقعك يغيّران الترتيب.',
+'Yield forecast · coming with FAO data':'توقع الإنتاجية · قريبًا مع بيانات FAO',
+'Goal is Max yield: crops without a yield forecast are scored on their other factors only.':'الهدف هو أعلى إنتاجية: المحاصيل التي لا يتوفر لها توقع إنتاجية تُقيَّم على عواملها الأخرى فقط.',
+'Also available':'متاح أيضًا','Other crops · indicative only':'محاصيل أخرى · إرشادي فقط',
+'The crops above have the full analysis (climate, water, soil), and a yield estimate for most of them. These are scored on climate and pH alone, so they are not comparable with the list above.':'المحاصيل أعلاه لها تحليل كامل (المناخ والمياه والتربة) وتقدير للإنتاجية لمعظمها. أما هذه فتُقيَّم بالمناخ والـ pH فقط، فلا تصح مقارنتها بالقائمة أعلاه.',
+'Water':'المياه','Soil':'التربة','Yield':'الإنتاجية',
+'🌍 ECO-FRIENDLY PICK':'🌍 اختيار صديق للبيئة','BALANCED ALTERNATIVE':'بديل متوازن',
+'None of the other top crops is clearly gentler on soil and water than the best crop, so this is shown only as a balanced alternative, not as an eco choice.':'لا يوجد بين المحاصيل الأولى محصول أرفق بالتربة والمياه بوضوح من أفضل محصول، فيُعرض هذا كبديل متوازن فقط وليس كاختيار صديق للبيئة.',
+'A legume: it fixes nitrogen in the soil, so it needs less fertiliser and helps the next crop':'محصول بقولي: يثبّت النيتروجين في التربة فيحتاج سمادًا أقل ويفيد المحصول التالي',
+'Select crop':'اختر المحصول','Check crop':'افحص المحصول','Expected yield':'الإنتاجية المتوقعة','Typical yield in Egypt':'الإنتاجية المعتادة في مصر','No Egypt reference yield for this crop':'لا توجد إنتاجية مرجعية لهذا المحصول في مصر',
+'Yield forecast not available for this crop yet (expanding with FAO data)':'توقع الإنتاجية غير متاح لهذا المحصول بعد (يتوسع مع بيانات FAO)',
+'t/ha':'طن/هكتار','mm / season':'ملم / الموسم','% match':'% توافق','days':'يوم','CLIMATE + pH ONLY · INDICATIVE':'المناخ والـ pH فقط · إرشادي',
+'This crop has no water or yield data in our dataset, so it is scored on climate and soil pH only. Its score cannot be compared with the fully analysed crops.':'لا تتوفر لهذا المحصول بيانات مياه أو إنتاجية في بياناتنا، لذا يُقيَّم بالمناخ وحموضة التربة فقط. ولا تصح مقارنة درجته بالمحاصيل المحلَّلة بالكامل.',
+'Temperature fit':'ملاءمة الحرارة','pH fit':'ملاءمة الـ pH','pH not given':'لم يُدخَل الـ pH','Grow instead':'ازرع بدلًا منه','Nothing clearly better right now.':'لا يوجد بديل أفضل بوضوح حاليًا.','Or wait':'أو انتظر','No better planting date found.':'لم يُعثر على موعد زراعة أفضل.',
+'Decision matrix':'مصفوفة القرار','Crop Viability & Regret Comparison':'مقارنة جدوى المحاصيل والخسارة المحتملة','Water Saver':'موفّر المياه','Max Profit':'أقصى ربح','Soil Care':'رعاية التربة',
+'Scenario weights':'أوزان السيناريو','Reset':'إعادة ضبط','Yield priority':'أولوية الإنتاجية','Soil benefit':'فائدة التربة','Water conservation':'توفير المياه',
+'LEAST REGRET CHOICE':'الخيار الأقل خسارة محتملة','FIT SCORE':'درجة الملاءمة','Smallest weighted loss across yield, soil and water for your farm.':'أقل خسارة مرجّحة في الإنتاجية والتربة والمياه لمزرعتك.',
+'4-metric comparison':'مقارنة بأربعة مقاييس','Water efficiency':'كفاءة المياه','Season fit':'ملاءمة الموسم','Rank order · ranked by weighted fit':'ترتيب المحاصيل · حسب الملاءمة المرجّحة',
+'No yield estimate yet · not in the regret pick':'لا يوجد تقدير للإنتاجية بعد · غير مشمول في اختيار أقل خسارة','Regret':'الخسارة المحتملة',
+'Annual thermal delta':'التغير الحراري السنوي','Mean temperature rise':'متوسط الارتفاع في الحرارة','Season shift window':'نافذة انزياح الموسم',
+'Average gap between today and the best planting start for wheat and cotton':'متوسط الفارق بين اليوم وأفضل بداية زراعة للقمح والقطن','Explore viable crops':'استكشف المحاصيل المناسبة','Adjust planting dates for the shifted season':'اضبط مواعيد الزراعة وفق الموسم المتغيّر',
+'Enterprise · live NASA POWER feed':'للمؤسسات · بيانات NASA POWER مباشرة','Commercial feasibility projections (goal: max yield)':'توقعات الجدوى التجارية (الهدف: أعلى إنتاجية)','Top regional commercial crops':'أعلى المحاصيل التجارية في المنطقة',
+'Overall score':'الدرجة العامة','Yield score':'درجة الإنتاجية','Also analysed · no yield forecast yet':'محاصيل محلَّلة أيضًا · لا يوجد توقع للإنتاجية بعد','Export regional crop data':'تصدير بيانات محاصيل المنطقة','Download CSV':'تنزيل CSV','Get API':'احصل على API',
+'Recommended':'موصى به','Possible with caution':'ممكن بحذر','Not recommended':'غير موصى به',
+'Jan':'يناير','Feb':'فبراير','Mar':'مارس','Apr':'أبريل','May':'مايو','Jun':'يونيو','Jul':'يوليو','Aug':'أغسطس','Sep':'سبتمبر','Oct':'أكتوبر','Nov':'نوفمبر','Dec':'ديسمبر',
+'Soil benefit':'فائدة التربة',
+'Last 14 days temperature':'حرارة آخر 14 يومًا','°C mean':'°م متوسط','Last 90 days rain':'أمطار آخر 90 يومًا','mm':'ملم','Source: NASA POWER':'المصدر: NASA POWER'
+};
+const SEG=[ // sentence-level patterns (also used per "; " segment)
+[/^pH inside the indicative range$/,()=>'الـ pH داخل المدى الإرشادي'],
+[/^pH unknown \(neutral score used\)$/,()=>'الـ pH غير معروف (حُسبت درجة محايدة)'],
+[/^pH is ([\d.]+) units outside the indicative range$/,m=>`الـ pH خارج المدى الإرشادي بمقدار ${m[1]} وحدة`],
+[/^(loam|sandy|clay|silt|peat) soil suits this crop (\d+)\/100 \(indicative\)$/i,m=>`التربة ${SOIL[m[1].toLowerCase()]} تناسب هذا المحصول بدرجة ${m[2]}/100 (تقديري)`],
+[/^Needs about (\d+) mm irrigation, above your (\d+) mm$/,m=>`يحتاج حوالي ${m[1]} ملم ري، وهو أكثر من سعتك (${m[2]} ملم)`],
+[/^Outside the usual planting months in Egypt$/,()=>'خارج شهور الزراعة المعتادة في مصر'],
+[/^Temperatures in the growing window are far from the crop's range$/,()=>'درجات الحرارة في فترة النمو بعيدة عن المدى المناسب للمحصول']
+];
+const RX=[
+[/^Field setup · (.+)$/,m=>`إعداد الحقل · ${m[1]}`],
+[/^([\d.]+), ([\d.]+) · nearest governorate: (.+) \(~(\d+) km from its centre\)$/,m=>`${m[1]}, ${m[2]} · أقرب محافظة: ${m[3]} (على بعد حوالي ${m[4]} كم من مركزها)`],
+[/^Could not get GPS \((.*)\)\. Tap the map instead\.$/,m=>`تعذّر تحديد الموقع (${m[1]}). اضغط على الخريطة بدلًا من ذلك.`],
+[/^(.*?) · (loam|sandy|clay|silt|peat) soil · (flood|sprinkler|drip) irrigation · planting (\S+)$/i,m=>`${m[1]} · تربة ${SOIL[m[2].toLowerCase()].slice(2)||''} · ري ${IRR[m[3].toLowerCase()].slice(1)} · الزراعة ${m[4]}`],
+[/^The nearest weather station is about (\d+) km away, so numbers are approximate\.$/,m=>`أقرب محطة طقس تبعد حوالي ${m[1]} كم، لذا الأرقام تقريبية.`],
+[/^Best crop now · (.+)$/,m=>`أفضل محصول الآن · ${m[1]}`],
+[/^Harvest: (.+)$/,m=>`الحصاد: ${m[1].replace(/\b(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\b/g,x=>MON[x])}`],
+[/^Check (.+) →$/,m=>`افحص ${m[1]} →`],
+[/^(.+): (Recommended|Possible with caution|Not recommended)$/,m=>`${m[1]}: ${LBL[m[2]]}`],
+[/^Runner-up crop · rank #(\d+)$/,m=>`ثاني أفضل محصول · الترتيب #${m[1]}`],
+[/^Gentle on the soil: soil score (\d+)\/100(?: \(vs (\d+) for (.+)\))?$/,m=>`لطيف على التربة: درجة التربة ${m[1]}/100`+(m[2]?` (مقابل ${m[2]} في ${m[3]})`:'')],
+[/^Water-efficient: water score (\d+)\/100(?: \(vs (\d+) for (.+)\))?$/,m=>`كفء في استخدام المياه: درجة المياه ${m[1]}/100`+(m[2]?` (مقابل ${m[2]} في ${m[3]})`:'')],
+[/^Still suitable for your farm: overall score (\d+)$/,m=>`ما زال مناسبًا لمزرعتك: الدرجة العامة ${m[1]}`],
+[/^Typical in Egypt: ([\d.]+) t\/ha \(FAO (.*?)\)\. Experimental estimate, not a forecast$/,m=>`المعتاد في مصر: ${m[1]} طن/هكتار (FAO ${m[2]}). تقدير تجريبي وليس توقعًا`],
+[/^Real FAO average \((.*?)\)\.\s*(.*)$/,m=>`متوسط FAO الفعلي (${m[1]}).`+(m[2]?' '+tr(m[2]):'')],
+[/^Within your capacity \((\d+) mm\)$/,m=>`ضمن سعتك (${m[1]} ملم)`],
+[/^Over your capacity \((\d+) mm\)$/,m=>`أكثر من سعتك (${m[1]} ملم)`],
+[/^yield ([+-]?[\d.]+) · water ([+-]?[\d.]+)$/,m=>`الإنتاجية ${m[1]} · المياه ${m[2]}`],
+[/^\(in (\d+) days\)$/,m=>`(بعد ${m[1]} يوم)`],
+[/^Score then: (\d+)$/,m=>`الدرجة وقتها: ${m[1]}`],
+[/^(.+): no yield estimate yet$/,m=>`${m[1]}: لا يوجد تقدير للإنتاجية بعد`],
+[/^RANK #(\d+)( · LEAST REGRET)?$/,m=>`الترتيب #${m[1]}`+(m[2]?' · الأقل خسارة':'')],
+[/^(\d)\. (.+)$/,m=>`${m[1]}. ${tr(m[2])}`],
+[/^Thermal analysis · (.+) station$/,m=>`التحليل الحراري · محطة ${m[1]}`],
+[/^(.+) Thermal Curve$/,m=>`منحنى الحرارة · ${m[1]}`],
+[/^Dashed = baseline · Green = recent years \(since (\d+)\)$/,m=>`المتقطع = خط الأساس · الأخضر = السنوات الأخيرة (منذ ${m[1]})`],
+[/^Baseline ([\d.]+)°C avg$/,m=>`متوسط الأساس ${m[1]}°م`],
+[/^Recent ([\d.]+)°C$/,m=>`الحديث ${m[1]}°م`],
+[/^Max ([\d.]+)°C · as of (\S+)$/,m=>`الحد الأقصى ${m[1]}°م · حتى ${m[2]}`],
+[/^Right now · (.+)$/,m=>`الآن · ${m[1]}`],
+[/^Scores for every crop in (.+)$/,m=>`درجات كل المحاصيل في ${m[1]}`],
+[/^(.+) · (\d+) · FAO ([\d.]+) t\/ha$/,m=>`${m[1]} · ${m[2]} · FAO ${m[3]} طن/هكتار`],
+[/^(.*)\. Make sure the server is running \(run_server\.bat\) and open http:\/\/localhost:8000$/,m=>`${m[1]}. تأكد من تشغيل السيرفر (run_server.bat) ثم افتح http://localhost:8000`]
+];
+let NAMES=[];
+function buildNames(){const a=[];Object.keys(ARCROP).forEach(k=>a.push([k[0].toUpperCase()+k.slice(1),ARCROP[k]]));
+ (window.GOV||GOV||[]).forEach(g=>{if(ARGOV[g.id])a.push([g.name,ARGOV[g.id]])});
+ (window.CROPS||CROPS||[]).forEach(c=>{if(ARCROP[c.id])a.push([c.name,ARCROP[c.id]])});
+ a.sort((x,y)=>y[0].length-x[0].length);NAMES=a}
+function names(s){for(const[e,r]of NAMES)if(s.includes(e))s=s.replace(new RegExp('(^|[^A-Za-z])'+e.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'(?![A-Za-z])','g'),(m,p)=>p+r);return s}
+function seg(s){for(const[r,f]of SEG){const m=s.match(r);if(m)return f(m)}return null}
+function tr(t){if(D[t]!==undefined)return D[t];
+ for(const[r,f]of RX){const m=t.match(r);if(m)return names(f(m))}
+ if(t.includes('; ')){const p=t.split('; '),o=p.map(x=>seg(x)||D[x]||names(x));if(o.some((x,i)=>x!==p[i]))return o.join('؛ ')}
+ const s1=seg(t);if(s1)return s1;
+ const n=names(t);return n}
+window.tr=tr;
+const orig=new WeakMap(),origAttr=new WeakMap();
+function nodeTr(n){const cur=n.data;const o=orig.get(n);if(o&&o.ar===cur)return;
+ const lead=cur.match(/^\s*/)[0],trail=cur.match(/\s*$/)[0],core=cur.trim();if(!core)return;
+ const r=tr(core);if(r!==core){orig.set(n,{en:cur,ar:lead+r+trail});n.data=lead+r+trail}}
+function walk(root){const w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT,{acceptNode:n=>/^(SCRIPT|STYLE)$/.test(n.parentNode&&n.parentNode.nodeName)?NodeFilter.FILTER_REJECT:NodeFilter.FILTER_ACCEPT});
+ const a=[];while(w.nextNode())a.push(w.currentNode);a.forEach(nodeTr);
+ (root.querySelectorAll?root.querySelectorAll('[placeholder]'):[]).forEach(e=>{const p=e.getAttribute('placeholder');if(!origAttr.has(e)){origAttr.set(e,p)}e.setAttribute('placeholder',({"don't know":'لا أعرف'})[origAttr.get(e)]||p)})}
+let on=false,busy=false;
+const mo=new MutationObserver(recs=>{if(!on||busy)return;busy=true;try{buildNames();for(const r of recs){if(r.type==='characterData')nodeTr(r.target);else r.addedNodes.forEach(n=>{if(n.nodeType===3)nodeTr(n);else if(n.nodeType===1)walk(n)})}}finally{setTimeout(()=>busy=false,0)}});
+mo.observe(document.body,{childList:true,subtree:true,characterData:true});
+function restore(){const w=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT);const a=[];while(w.nextNode())a.push(w.currentNode);
+ a.forEach(n=>{const o=orig.get(n);if(o&&n.data===o.ar){n.data=o.en}orig.delete(n)});
+ document.querySelectorAll('[placeholder]').forEach(e=>{if(origAttr.has(e))e.setAttribute('placeholder',origAttr.get(e))})}
+window.setLang=function(l){S.lang=l;try{localStorage.fi=JSON.stringify(S)}catch(_){}
+ document.documentElement.lang=l;document.documentElement.dir=l=='ar'?'rtl':'ltr';
+ const b=document.getElementById('tl');if(b)b.textContent=l=='ar'?'English':'عربي';
+ busy=true;on=false;restore();if(l=='ar'){on=true;buildNames();walk(document.body)}busy=false};
+window.__i18nReady=()=>{if(S.lang=='ar')setLang('ar')};
+})();
+
+document.getElementById('tl').onclick=()=>setLang(S.lang=='ar'?'en':'ar');
+</script></body></html>
